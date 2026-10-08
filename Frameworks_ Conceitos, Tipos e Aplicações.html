@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Frameworks: Conceitos, Tipos e Aplicações</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;800&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#1b1a3a;--bg2:#252350;--ink:#f2effa;--mute:#b4b0d6;--pink:#ff5c7a;--cyan:#5ad1e6;--line:rgba(242,239,250,.14);
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',system-ui,sans-serif;overflow:hidden}
+body{background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:48px 48px}
+.deck{position:relative;height:100%}
+.s{position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;padding:6vh 8vw 10vh;overflow-y:auto}
+.s.on{display:flex}
+h1,h2{font-family:'Bricolage Grotesque',system-ui,sans-serif;margin:0;line-height:1.02;letter-spacing:-.02em}
+h1{font-size:clamp(2.6rem,8vw,6.5rem);font-weight:800;max-width:14ch}
+h2{font-size:clamp(1.9rem,4.6vw,3.6rem);font-weight:800;margin-bottom:.6em}
+h3{font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:1.25rem;margin:0 0 .6em;color:var(--cyan)}
+p,li{font-size:clamp(1rem,1.7vw,1.35rem);line-height:1.5;max-width:60ch}
+.sub{color:var(--mute);font-size:clamp(1.1rem,2vw,1.6rem);margin-top:1em;max-width:40ch}
+.by{margin-top:2.5em;color:var(--pink);font-weight:500}
+ul{list-style:none;padding:0;margin:0}
+li{padding:.35em 0 .35em 1.4em;position:relative}
+li::before{content:"";position:absolute;left:0;top:.95em;width:.6em;height:3px;background:var(--pink)}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:2rem}
+.col{border-top:3px solid var(--cyan);padding-top:1rem}
+.col.bad{border-color:var(--pink)}.col.bad h3{color:var(--pink)}
+.ex{margin-top:1.4em;padding:1em 1.2em;background:var(--bg2);border-left:4px solid var(--cyan);color:var(--mute);max-width:60ch}
+.chips{display:flex;flex-wrap:wrap;gap:.6rem}
+.chip{padding:.45em 1em;border:1.5px solid var(--ink);border-radius:99px;font-weight:500}
+.tri{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:2rem}
+.big{font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:clamp(1.4rem,3vw,2.2rem);font-weight:800;color:var(--pink);margin-bottom:.4em}
+.flow{display:flex;flex-wrap:wrap;gap:1rem;align-items:stretch;margin-top:1.5rem}
+.box{flex:1 1 220px;padding:1.1em 1.3em;background:var(--bg2);border:1.5px solid var(--line)}
+.box b{display:block;margin-bottom:.3em;font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:1.3rem}
+.box.fw{border-color:var(--pink)}.box.me{border-color:var(--cyan)}
+.key{margin-top:1.4em;font-weight:500;color:var(--cyan)}
+.tw{overflow-x:auto;max-width:100%}
+table{border-collapse:collapse;min-width:520px;width:100%;max-width:820px}
+th,td{text-align:left;padding:.8em 1em;border-bottom:1px solid var(--line);font-size:clamp(1rem,1.7vw,1.25rem)}
+th{color:var(--cyan);font-weight:500}td:first-child{font-weight:500;color:var(--pink)}
+.stack{display:grid;gap:.6rem;max-width:620px}
+.layer{padding:.9em 1.2em;background:var(--bg2);border-left:5px solid var(--cyan);display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.layer:nth-child(2){border-color:var(--pink)}.layer:nth-child(3){border-color:var(--ink)}
+.layer span:last-child{color:var(--mute)}
+.res{margin-top:1.2em;font-weight:500;color:var(--pink);font-size:1.2rem}
+nav{position:fixed;left:0;right:0;bottom:0;padding:.8rem 8vw calc(.8rem + env(safe-area-inset-bottom,0px));display:flex;align-items:center;gap:1rem;background:linear-gradient(transparent,var(--bg) 60%)}
+.bar{flex:1;height:4px;background:var(--line)}.bar i{display:block;height:100%;width:0;background:var(--pink);transition:width .3s}
+button{font:inherit;background:none;color:var(--ink);border:1.5px solid var(--ink);width:2.6rem;height:2.6rem;border-radius:50%;cursor:pointer}
+button:hover{background:var(--ink);color:var(--bg)}button:focus-visible{outline:3px solid var(--cyan);outline-offset:2px}
+#n{color:var(--mute);min-width:3.5rem;text-align:center;font-variant-numeric:tabular-nums}
+</style>
+</head>
+<body>
+<main class="deck" id="deck">
+
+<section class="s on">
+<h1>Frameworks: conceitos, tipos e aplicações</h1>
+<p class="sub">Como os frameworks aceleram o desenvolvimento de software</p>
+<p class="by">Apresentado por: Seu nome</p>
+</section>
+
+<section class="s">
+<h2>O que é um framework?</h2>
+<ul>
+<li>Estrutura reutilizável para desenvolvimento de software.</li>
+<li>Fornece padrões, bibliotecas e ferramentas prontas.</li>
+<li>Reduz o tempo de desenvolvimento.</li>
+<li>Promove boas práticas de programação.</li>
+</ul>
+<p class="ex">Em vez de construir tudo do zero, o desenvolvedor parte de uma base já estruturada.</p>
+</section>
+
+<section class="s">
+<h2>Por que utilizar frameworks?</h2>
+<div class="cols">
+<div class="col"><h3>Benefícios</h3><ul>
+<li>Maior produtividade</li><li>Padronização do código</li><li>Facilidade de manutenção</li><li>Segurança aprimorada</li><li>Escalabilidade</li></ul></div>
+<div class="col bad"><h3>Desafios</h3><ul>
+<li>Curva de aprendizado</li><li>Dependência da estrutura do framework</li><li>Possível impacto no desempenho</li></ul></div>
+</div>
+</section>
+
+<section class="s">
+<h2>Tipos de frameworks</h2>
+<div class="tri">
+<div><div class="big">Front-end</div><div class="chips"><span class="chip">React</span><span class="chip">Angular</span><span class="chip">Vue.js</span></div></div>
+<div><div class="big">Back-end</div><div class="chips"><span class="chip">Django</span><span class="chip">Spring Boot</span><span class="chip">Laravel</span></div></div>
+<div><div class="big">Mobile</div><div class="chips"><span class="chip">Flutter</span><span class="chip">React Native</span></div></div>
+</div>
+</section>
+
+<section class="s">
+<h2>Como um framework funciona?</h2>
+<ul>
+<li>Define uma arquitetura.</li>
+<li>Fornece componentes reutilizáveis.</li>
+<li>Gerencia fluxos e processos comuns.</li>
+<li>Deixa o desenvolvedor focar na lógica de negócio.</li>
+</ul>
+<div class="flow">
+<div class="box me"><b>Biblioteca</b>Você chama o código dela, quando quiser.</div>
+<div class="box fw"><b>Framework</b>Ele chama o seu código, na hora certa.</div>
+</div>
+<p class="key">Conceito-chave: Inversão de Controle (IoC)</p>
+</section>
+
+<section class="s">
+<h2>Exemplos populares</h2>
+<div class="tw"><table>
+<tr><th>Framework</th><th>Linguagem</th><th>Aplicação</th></tr>
+<tr><td>React</td><td>JavaScript</td><td>Interfaces web</td></tr>
+<tr><td>Angular</td><td>TypeScript</td><td>Aplicações web</td></tr>
+<tr><td>Django</td><td>Python</td><td>Sistemas web</td></tr>
+<tr><td>Spring Boot</td><td>Java</td><td>APIs e microsserviços</td></tr>
+<tr><td>Laravel</td><td>PHP</td><td>Aplicações web</td></tr>
+</table></div>
+</section>
+
+<section class="s">
+<h2>Frameworks na prática</h2>
+<p>Desenvolvimento de um sistema de e-commerce:</p>
+<div class="stack">
+<div class="layer"><span>Front-end</span><span>React</span></div>
+<div class="layer"><span>Back-end</span><span>Spring Boot</span></div>
+<div class="layer"><span>Banco de dados</span><span>PostgreSQL</span></div>
+</div>
+<p class="res">Resultado: desenvolvimento mais rápido e organizado.</p>
+</section>
+
+<section class="s">
+<h2>Vantagens para empresas</h2>
+<ul>
+<li>Redução de custos</li>
+<li>Menor tempo de entrega</li>
+<li>Qualidade padronizada</li>
+<li>Facilidade de escalabilidade</li>
+<li>Comunidades ativas e suporte contínuo</li>
+</ul>
+</section>
+
+<section class="s">
+<h2>Tendências futuras</h2>
+<ul>
+<li>Frameworks orientados a IA</li>
+<li>Arquiteturas serverless</li>
+<li>Microsserviços</li>
+<li>Frameworks para aplicações em nuvem</li>
+</ul>
+</section>
+
+<section class="s">
+<h1>Conclusão</h1>
+<ul style="margin-top:1.2em">
+<li>Frameworks aceleram o desenvolvimento.</li>
+<li>Ajudam na padronização e na manutenção.</li>
+<li>Há opções para web, mobile e back-end.</li>
+<li>São fundamentais no desenvolvimento moderno de software.</li>
+</ul>
+</section>
+
+</main>
+<nav>
+<button id="p" aria-label="Slide anterior">&lsaquo;</button>
+<div class="bar"><i id="b"></i></div>
+<span id="n"></span>
+<button id="x" aria-label="Próximo slide">&rsaquo;</button>
+</nav>
+<script>
+var S=[].slice.call(document.querySelectorAll('.s')),i=0;
+function go(k){i=Math.max(0,Math.min(S.length-1,k));S.forEach(function(s,j){s.classList.toggle('on',j===i)});
+document.getElementById('n').textContent=(i+1)+' / '+S.length;
+document.getElementById('b').style.width=((i+1)/S.length*100)+'%';S[i].scrollTop=0}
+document.getElementById('p').onclick=function(){go(i-1)};
+document.getElementById('x').onclick=function(){go(i+1)};
+document.addEventListener('keydown',function(e){
+if(['ArrowRight','PageDown',' '].indexOf(e.key)>-1){e.preventDefault();go(i+1)}
+if(['ArrowLeft','PageUp'].indexOf(e.key)>-1){e.preventDefault();go(i-1)}
+if(e.key==='Home')go(0);if(e.key==='End')go(S.length-1)});
+var t=null;document.addEventListener('touchstart',function(e){t=e.touches[0].clientX},{passive:true});
+document.addEventListener('touchend',function(e){if(t===null)return;var d=e.changedTouches[0].clientX-t;if(Math.abs(d)>50)go(i+(d<0?1:-1));t=null});
+go(0);
+</script>
+</body>
+</html>

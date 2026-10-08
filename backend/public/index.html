@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Painel de Controle – Apresentação</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --bg:#0f0f1a;--surface:#1a1a2e;--surface2:#252542;--border:#333360;
+  --text:#e8e6f0;--muted:#8884aa;--accent:#7c5cfc;--accent2:#5ad1e6;
+  --pink:#ff5c7a;--green:#4ade80;--radius:12px;
+}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;font-size:14px}
+body{display:flex;flex-direction:column;overflow:hidden}
+
+/* ── Header ─────────────────────────── */
+header{display:flex;align-items:center;gap:16px;padding:12px 20px;background:var(--surface);border-bottom:1px solid var(--border)}
+header h1{font-size:16px;font-weight:700;margin:0;flex:1}
+.status{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.dot{width:8px;height:8px;border-radius:50%;background:#666;transition:background .3s}
+.dot.connected{background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* ── Main layout ────────────────────── */
+.layout{display:grid;grid-template-columns:280px 1fr 320px;flex:1;overflow:hidden}
+
+/* ── Sidebar (slide list) ───────────── */
+.sidebar{background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.sidebar-header{padding:12px 16px;border-bottom:1px solid var(--border);font-weight:600;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.slide-list{flex:1;overflow-y:auto;padding:8px}
+.slide-item{display:flex;gap:10px;padding:8px 10px;border-radius:var(--radius);cursor:pointer;transition:all .15s;margin-bottom:4px;align-items:flex-start}
+.slide-item:hover{background:var(--surface2)}
+.slide-item.active{background:var(--accent);color:#fff}
+.slide-item.active .slide-num{background:rgba(255,255,255,.2);color:#fff}
+.slide-num{flex-shrink:0;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:8px;background:var(--surface2);font-weight:700;font-size:12px;color:var(--accent)}
+.slide-title{font-size:13px;line-height:1.4;padding-top:3px}
+.slide-thumb{width:100%;aspect-ratio:16/9;border:1px solid var(--border);border-radius:8px;margin-top:6px;overflow:hidden;background:var(--bg)}
+.slide-thumb iframe{width:400%;height:400%;transform:scale(.25);transform-origin:0 0;pointer-events:none;border:none}
+
+/* ── Center (main preview) ──────────── */
+.center{display:flex;flex-direction:column;overflow:hidden}
+
+/* Controls bar */
+.controls{display:flex;align-items:center;justify-content:center;gap:12px;padding:14px 20px;background:var(--surface);border-bottom:1px solid var(--border)}
+.ctrl-btn{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  padding:8px 18px;border:1.5px solid var(--border);border-radius:var(--radius);
+  background:var(--surface2);color:var(--text);font-size:13px;font-weight:600;
+  cursor:pointer;transition:all .15s;font-family:inherit
+}
+.ctrl-btn:hover{border-color:var(--accent);background:var(--accent);color:#fff}
+.ctrl-btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.ctrl-btn.primary:hover{background:#6548e0}
+.ctrl-btn svg{width:18px;height:18px;fill:currentColor}
+.slide-counter{font-size:15px;font-weight:700;min-width:80px;text-align:center;font-variant-numeric:tabular-nums}
+
+/* Preview frame */
+.preview-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:20px;overflow:hidden}
+.preview-frame{width:100%;max-width:960px;aspect-ratio:16/9;border:2px solid var(--border);border-radius:var(--radius);overflow:hidden;background:#1b1a3a;position:relative}
+.preview-frame iframe{width:100%;height:100%;border:none}
+.preview-label{position:absolute;top:8px;left:12px;font-size:11px;background:rgba(0,0,0,.6);color:var(--muted);padding:3px 8px;border-radius:6px;pointer-events:none;z-index:2}
+
+/* ── Right panel (notes) ────────────── */
+.right-panel{background:var(--surface);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.right-header{padding:12px 16px;border-bottom:1px solid var(--border);font-weight:600;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;display:flex;align-items:center;justify-content:space-between}
+.note-area{flex:1;display:flex;flex-direction:column;padding:12px}
+.note-area textarea{
+  flex:1;resize:none;border:1.5px solid var(--border);border-radius:var(--radius);
+  padding:12px;font-family:inherit;font-size:14px;line-height:1.6;
+  background:var(--surface2);color:var(--text);outline:none;transition:border-color .15s
+}
+.note-area textarea:focus{border-color:var(--accent)}
+.note-area textarea::placeholder{color:var(--muted)}
+.note-actions{display:flex;gap:8px;padding-top:10px}
+.note-actions .ctrl-btn{flex:1;justify-content:center}
+.saved-msg{font-size:12px;color:var(--green);opacity:0;transition:opacity .3s;text-align:center;padding-top:6px}
+.saved-msg.show{opacity:1}
+
+/* ── Next slide preview ─────────────── */
+.next-preview{border-top:1px solid var(--border);padding:12px}
+.next-preview-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;font-weight:600}
+.next-thumb{width:100%;aspect-ratio:16/9;border:1px solid var(--border);border-radius:8px;overflow:hidden;background:var(--bg)}
+.next-thumb iframe{width:400%;height:400%;transform:scale(.25);transform-origin:0 0;pointer-events:none;border:none}
+
+/* ── Keyboard shortcuts hint ────────── */
+.shortcuts{padding:10px 16px;border-top:1px solid var(--border);font-size:11px;color:var(--muted);line-height:1.7}
+.shortcuts kbd{
+  display:inline-block;padding:1px 6px;border:1px solid var(--border);
+  border-radius:4px;background:var(--surface2);font-family:inherit;font-size:11px;margin:0 2px
+}
+
+/* ── Scrollbar ──────────────────────── */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--muted)}
+
+/* ── Mobile ─────────────────────────── */
+@media(max-width:900px){
+  .layout{grid-template-columns:1fr;grid-template-rows:auto 1fr auto}
+  .sidebar{max-height:30vh;border-right:none;border-bottom:1px solid var(--border)}
+  .right-panel{border-left:none;border-top:1px solid var(--border);max-height:40vh}
+  .next-preview{display:none}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🎛 Painel de Controle</h1>
+  <div class="status"><span class="dot" id="statusDot"></span><span id="statusText">Conectando…</span></div>
+</header>
+
+<div class="layout">
+
+  <!-- Left: slide list -->
+  <div class="sidebar">
+    <div class="sidebar-header">Slides</div>
+    <div class="slide-list" id="slideList"></div>
+    <div class="shortcuts">
+      <kbd>←</kbd> Anterior &nbsp; <kbd>→</kbd> Próximo &nbsp; <kbd>Home</kbd> Início &nbsp; <kbd>End</kbd> Fim
+    </div>
+  </div>
+
+  <!-- Center: main preview + controls -->
+  <div class="center">
+    <div class="controls">
+      <button class="ctrl-btn" id="btnPrev" title="Anterior (←)">
+        <svg viewBox="0 0 24 24"><path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+        Anterior
+      </button>
+      <span class="slide-counter" id="counter">– / –</span>
+      <button class="ctrl-btn primary" id="btnNext" title="Próximo (→)">
+        Próximo
+        <svg viewBox="0 0 24 24"><path d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+      </button>
+    </div>
+
+    <div class="preview-wrap">
+      <div class="preview-frame">
+        <span class="preview-label">Slide atual</span>
+        <iframe id="mainPreview"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right: notes + next preview -->
+  <div class="right-panel">
+    <div class="right-header">
+      <span>📝 Cola / Anotações</span>
+      <span id="noteSlideLabel" style="font-size:12px;color:var(--accent)"></span>
+    </div>
+    <div class="note-area">
+      <textarea id="noteText" placeholder="Escreva aqui suas anotações para este slide…&#10;&#10;Ex: Lembrar de mencionar que frameworks usam IoC"></textarea>
+      <div class="note-actions">
+        <button class="ctrl-btn primary" id="btnSaveNote">💾 Salvar</button>
+      </div>
+      <div class="saved-msg" id="savedMsg">✓ Nota salva com sucesso!</div>
+    </div>
+
+    <div class="next-preview">
+      <div class="next-preview-label">Próximo slide</div>
+      <div class="next-thumb" id="nextThumbWrap">
+        <iframe id="nextPreview"></iframe>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function() {
+  // ── State ──────────────────────────────────────────────────────────
+  var currentSlide = 0;
+  var totalSlides = 0;
+  var slides = [];
+  var ws = null;
+  var noteSaveTimeout = null;
+
+  // ── DOM refs ───────────────────────────────────────────────────────
+  var elCounter     = document.getElementById('counter');
+  var elMainPreview = document.getElementById('mainPreview');
+  var elNextPreview = document.getElementById('nextPreview');
+  var elNextWrap    = document.getElementById('nextThumbWrap');
+  var elSlideList   = document.getElementById('slideList');
+  var elNoteText    = document.getElementById('noteText');
+  var elSavedMsg    = document.getElementById('savedMsg');
+  var elNoteLabel   = document.getElementById('noteSlideLabel');
+  var elStatusDot   = document.getElementById('statusDot');
+  var elStatusText  = document.getElementById('statusText');
+
+  // ── WebSocket ──────────────────────────────────────────────────────
+  function connectWS() {
+    ws = new WebSocket('ws://' + location.host);
+
+    ws.onopen = function() {
+      elStatusDot.className = 'dot connected';
+      elStatusText.textContent = 'Conectado';
+      console.log('[Painel] WebSocket conectado');
+    };
+
+    ws.onclose = function() {
+      elStatusDot.className = 'dot';
+      elStatusText.textContent = 'Desconectado – reconectando…';
+      console.log('[Painel] WebSocket desconectado, tentando reconectar…');
+      setTimeout(connectWS, 2000);
+    };
+
+    ws.onerror = function(err) {
+      console.error('[Painel] WebSocket erro:', err);
+    };
+
+    ws.onmessage = function(e) {
+      try {
+        var msg = JSON.parse(e.data);
+        if (msg.type === 'sync') {
+          totalSlides = msg.total;
+          currentSlide = msg.slide;
+          updateUI();
+        }
+      } catch(err) {
+        console.error('[Painel] Erro ao processar mensagem:', err);
+      }
+    };
+  }
+
+  function wsSend(obj) {
+    if (ws && ws.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify(obj));
+    } else {
+      console.warn('[Painel] WebSocket não está conectado');
+    }
+  }
+
+  // ── Fetch slides list ──────────────────────────────────────────────
+  function fetchSlides(cb) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '/api/slides');
+    xhr.onload = function() {
+      if (xhr.status === 200) {
+        slides = JSON.parse(xhr.responseText);
+        totalSlides = slides.length;
+        renderSlideList();
+        if (cb) cb();
+      }
+    };
+    xhr.send();
+  }
+
+  // ── Render slide list ──────────────────────────────────────────────
+  function renderSlideList() {
+    elSlideList.innerHTML = '';
+    for (var idx = 0; idx < slides.length; idx++) {
+      (function(s, i) {
+        var item = document.createElement('div');
+        item.className = 'slide-item' + (i === currentSlide ? ' active' : '');
+        item.id = 'si-' + i;
+        item.onclick = function() { wsSend({ type: 'goto', slide: i }); };
+
+        var numSpan = document.createElement('span');
+        numSpan.className = 'slide-num';
+        numSpan.textContent = i + 1;
+
+        var infoDiv = document.createElement('div');
+
+        var titleDiv = document.createElement('div');
+        titleDiv.className = 'slide-title';
+        titleDiv.textContent = s.title;
+
+        var thumbDiv = document.createElement('div');
+        thumbDiv.className = 'slide-thumb';
+
+        var thumbIframe = document.createElement('iframe');
+        thumbIframe.src = '/api/slide/' + i;
+        thumbIframe.loading = 'lazy';
+        thumbDiv.appendChild(thumbIframe);
+
+        infoDiv.appendChild(titleDiv);
+        infoDiv.appendChild(thumbDiv);
+
+        item.appendChild(numSpan);
+        item.appendChild(infoDiv);
+
+        elSlideList.appendChild(item);
+      })(slides[idx], idx);
+    }
+  }
+
+  // ── Update UI ──────────────────────────────────────────────────────
+  function updateUI() {
+    // Counter
+    elCounter.textContent = (currentSlide + 1) + ' / ' + totalSlides;
+
+    // Main preview
+    elMainPreview.src = '/api/slide/' + currentSlide;
+
+    // Next preview
+    var nextIdx = currentSlide + 1;
+    if (nextIdx < totalSlides) {
+      elNextPreview.src = '/api/slide/' + nextIdx;
+      elNextWrap.style.opacity = '1';
+    } else {
+      elNextPreview.srcdoc = '<html><body style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0f0f1a;color:#8884aa;font-family:sans-serif;margin:0"><p>Último slide</p></body></html>';
+      elNextWrap.style.opacity = '.5';
+    }
+
+    // Highlight active in list
+    var items = elSlideList.querySelectorAll('.slide-item');
+    for (var j = 0; j < items.length; j++) {
+      if (j === currentSlide) {
+        items[j].classList.add('active');
+      } else {
+        items[j].classList.remove('active');
+      }
+    }
+
+    // Scroll active into view
+    var activeEl = document.getElementById('si-' + currentSlide);
+    if (activeEl) activeEl.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+
+    // Load note
+    loadNote();
+
+    // Note label
+    elNoteLabel.textContent = 'Slide ' + (currentSlide + 1);
+  }
+
+  // ── Notes ──────────────────────────────────────────────────────────
+  function loadNote() {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '/api/note/' + currentSlide);
+    xhr.onload = function() {
+      if (xhr.status === 200) {
+        var data = JSON.parse(xhr.responseText);
+        elNoteText.value = data.note;
+      }
+    };
+    xhr.send();
+  }
+
+  function saveNote() {
+    var note = elNoteText.value;
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/api/note/' + currentSlide);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onload = function() {
+      elSavedMsg.classList.add('show');
+      clearTimeout(noteSaveTimeout);
+      noteSaveTimeout = setTimeout(function() { elSavedMsg.classList.remove('show'); }, 2000);
+    };
+    xhr.send(JSON.stringify({ note: note }));
+  }
+
+  // ── Button handlers ────────────────────────────────────────────────
+  document.getElementById('btnPrev').onclick = function() { wsSend({ type: 'prev' }); };
+  document.getElementById('btnNext').onclick = function() { wsSend({ type: 'next' }); };
+  document.getElementById('btnSaveNote').onclick = saveNote;
+
+  // ── Keyboard shortcuts ─────────────────────────────────────────────
+  document.addEventListener('keydown', function(e) {
+    // Don't intercept if user is typing in the textarea
+    if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') {
+      // But still handle Ctrl+S for saving
+      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault();
+        saveNote();
+      }
+      return;
+    }
+
+    switch (e.key) {
+      case 'ArrowRight':
+      case 'PageDown':
+        e.preventDefault();
+        wsSend({ type: 'next' });
+        break;
+      case 'ArrowLeft':
+      case 'PageUp':
+        e.preventDefault();
+        wsSend({ type: 'prev' });
+        break;
+      case 'Home':
+        e.preventDefault();
+        wsSend({ type: 'goto', slide: 0 });
+        break;
+      case 'End':
+        e.preventDefault();
+        wsSend({ type: 'goto', slide: totalSlides - 1 });
+        break;
+    }
+  });
+
+  // ── Init ───────────────────────────────────────────────────────────
+  connectWS();
+  fetchSlides(function() { updateUI(); });
+
+})();
+</script>
+</body>
+</html>
